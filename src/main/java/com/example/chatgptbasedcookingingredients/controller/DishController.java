@@ -4,13 +4,20 @@ import com.example.chatgptbasedcookingingredients.model.OpenAiMessage;
 import com.example.chatgptbasedcookingingredients.model.OpenAiRequest;
 import com.example.chatgptbasedcookingingredients.model.OpenAiResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
+import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -26,9 +33,19 @@ public class DishController {
                 .build();
     }
 
+
     // TODO: This should return a dish based on given ingredients.
     @PostMapping
     public String createDishByIngedients(@RequestBody String ingredients) {
-
+        OpenAiResponse response = restClient.post()
+                .uri("/chat/completions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new OpenAiRequest("gpt-3.5-turbo", List.of(
+                        new OpenAiMessage("user",
+                                "Please create a dish based on the given ingredients. It should have a title, description, instructions and the ingredients. Include emojis and format it nicely with little jokes and super cute. markdown please"),
+                        new OpenAiMessage("user", ingredients))))
+                .retrieve()
+                .body(OpenAiResponse.class);
+        return response.choices().getFirst().message().content();
     }
 }
