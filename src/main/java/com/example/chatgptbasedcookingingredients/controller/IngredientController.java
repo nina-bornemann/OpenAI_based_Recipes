@@ -1,4 +1,4 @@
-package com.example.chatgptbasedcookingingredients;
+package com.example.chatgptbasedcookingingredients.controller;
 
 import com.example.chatgptbasedcookingingredients.model.OpenAiMessage;
 import com.example.chatgptbasedcookingingredients.model.OpenAiRequest;
