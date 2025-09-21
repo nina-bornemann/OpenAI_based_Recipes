@@ -17,5 +17,5 @@ import java.util.List;
   }'
  */
 public record OpenAiRequest(String model,
-                            List<OpenAiMessage> message) {
+                            List<OpenAiMessage> messages) {
 }
