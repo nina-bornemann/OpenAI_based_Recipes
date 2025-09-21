@@ -19,8 +19,8 @@ public class IngredientController {
 
     private final RestClient restClient;
 
-    public IngredientController(@Value("${OPENAI_API_KEY}") String apiKey) {
-        this.restClient = RestClient.builder()
+    public IngredientController(RestClient.Builder builder, @Value("${OPENAI_API_KEY}") String apiKey) {
+        this.restClient = builder
                 .baseUrl("https://api.openai.com/v1")
                 .defaultHeader("Authorization", "Bearer " + apiKey)
                 .build();
