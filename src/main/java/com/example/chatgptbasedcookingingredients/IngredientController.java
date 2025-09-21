@@ -1,16 +1,24 @@
 package com.example.chatgptbasedcookingingredients;
 
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClient;
+import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 @RequestMapping("/ingredients")
-@RequiredArgsConstructor
 public class IngredientController {
+
+    private final RestClient restClient;
+
+    public IngredientController(@Value("${OPENAI_API_KEY}") String apiKey) {
+        this.restClient = RestClient.builder()
+                .baseUrl("https://api.openai.com/v1/")
+                .defaultHeader("Authorization", "Bearer " + apiKey)
+                .build();
+    }
 
     @PostMapping
     String categorizeIngredient(@RequestBody String ingredient) {
